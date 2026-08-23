@@ -11,7 +11,7 @@ function App() {
   const [earData, setEarData] = useState([]);
 
   const fetchAlerts = async () => {
-    const res = await fetch("http://localhost:5000/api/alerts");
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/alerts`)
     const data = await res.json();
     setAlerts(data);
   };

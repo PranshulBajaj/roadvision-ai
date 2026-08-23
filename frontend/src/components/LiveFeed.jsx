@@ -12,7 +12,7 @@ function LiveFeed({ onDrowsy, onYawn, onEarUpdate }) {
     const YAWN_THRESHOLD = 10
 
     async function sendAlert(type, earValue, marValue) {
-      await fetch('http://localhost:5000/api/alert', {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/alert`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ type, earValue, marValue }),
