@@ -1,8 +1,16 @@
 import { useEffect, useRef } from "react";
 
-function LiveFeed({ onDrowsy, onYawn, onEarUpdate }) {
+function LiveFeed({
+  onDrowsy,
+  onYawn,
+  onEarUpdate,
+  onPerclosUpdate,
+  onHeadPose,
+}) {
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  let totalFrames = 0;
+  let closedFrames = 0;
 
   useEffect(() => {
     let faceLandmarker;
@@ -78,10 +86,40 @@ function LiveFeed({ onDrowsy, onYawn, onEarUpdate }) {
 
           const avgEAR = ((ear + earRight) / 2).toFixed(3);
 
+          // PERCLOS calculation
+          totalFrames++;
+          if (avgEAR < 0.28) closedFrames++;
+          const perclos =
+            totalFrames > 0
+              ? ((closedFrames / totalFrames) * 100).toFixed(1)
+              : 0;
+          onPerclosUpdate(parseFloat(perclos));
+
           const mo = [13, 14, 78, 308, 82, 312].map((i) => landmarks[i]);
           const mar = (
             Math.abs(mo[0].y - mo[1].y) / Math.abs(mo[2].x - mo[3].x)
           ).toFixed(3);
+
+          // Head Pose Detection
+          const nose = landmarks[1];
+          const leftEar = landmarks[234];
+          const rightEar = landmarks[454];
+          const foreHead = landmarks[10];
+          const chin = landmarks[152];
+
+          // Horizontal tilt
+          const horizontalRatio =
+            (nose.x - leftEar.x) / (rightEar.x - leftEar.x);
+          // Vertical tilt
+          const verticalRatio = (nose.y - foreHead.y) / (chin.y - foreHead.y);
+
+          let headPose = "Forward";
+          if (horizontalRatio < 0.35) headPose = "Looking Right";
+          else if (horizontalRatio > 0.65) headPose = "Looking Left";
+          else if (verticalRatio < 0.45) headPose = "Looking Up";
+          else if (verticalRatio > 0.65) headPose = "Looking Down";
+
+          onHeadPose(headPose);
 
           onEarUpdate(parseFloat(avgEAR), parseFloat(mar));
 
@@ -121,6 +159,19 @@ function LiveFeed({ onDrowsy, onYawn, onEarUpdate }) {
             ctx.fillStyle = "orange";
             ctx.font = "bold 36px Arial";
             ctx.fillText("😴 YAWNING!", 180, 240);
+          }
+
+          if (drowsyFrames > DROWSY_THRESHOLD && drowsyFrames % 90 === 0) {
+            // Har 3 sec pe sound bajao
+            const audioCtx = new AudioContext();
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.frequency.value = 880;
+            gainNode.gain.value = 0.3;
+            oscillator.start();
+            setTimeout(() => oscillator.stop(), 800);
           }
         }
       }
