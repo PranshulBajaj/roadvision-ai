@@ -6,8 +6,7 @@ import DriverProfile from "./pages/DriverProfile";
 import About from "./pages/About";
 import Settings from "./pages/Settings";
 import Reports from "./pages/Reports";
-import Home from './pages/Home'
-
+import Home from "./pages/Home";
 
 function App() {
   const [alerts, setAlerts] = useState([]);
@@ -34,6 +33,14 @@ function App() {
     const interval = setInterval(fetchAlerts, 3000);
     return () => clearInterval(interval);
   }, []);
+  const handleNewRide = async () => {
+    if (window.confirm("Start new ride? All alerts will be cleared.")) {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/alerts`, {
+        method: "DELETE",
+      });
+      fetchAlerts();
+    }
+  };
 
   return (
     <div
@@ -43,19 +50,21 @@ function App() {
         fontFamily: "Inter, sans-serif",
       }}
     >
-      <Navbar
-        onNewRide={async () => {
-          if (window.confirm("Start new ride? All alerts will be cleared.")) {
-            await fetch(`${import.meta.env.VITE_API_URL}/api/alerts`, {
-              method: "DELETE",
-            });
-            fetchAlerts();
-          }
-        }}
-      />
+      <Navbar onNewRide={handleNewRide} />
       <div style={{ display: "flex" }}>
         <Sidebar />
         <div style={{ flex: 1, padding: "24px" }}>
+          {/* LiveFeed hidden — always mounted */}
+          <div style={{ display: "none" }}>
+            <LiveFeed
+              onDrowsy={fetchAlerts}
+              onYawn={fetchAlerts}
+              onEarUpdate={handleEarUpdate}
+              onPerclosUpdate={setPerclos}
+              onHeadPose={setHeadPose}
+            />
+          </div>
+
           <Routes>
             <Route
               path="/"
