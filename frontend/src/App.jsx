@@ -64,7 +64,7 @@ function App() {
               path="/"
               element={
                 <>
-                  {/* Top bar — Stats + PERCLOS + Head Pose + New Ride */}
+                  {/* Top bar — Stats*/}
                   <div
                     style={{
                       display: "flex",
@@ -76,110 +76,7 @@ function App() {
                   >
                     <Stats alerts={alerts} />
 
-                    {/* PERCLOS */}
-                    <div
-                      style={{
-                        background: "#111620",
-                        border: "1px solid #1e2535",
-                        borderRadius: "8px",
-                        padding: "12px 20px",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: "11px",
-                          color: "#64748b",
-                          textTransform: "uppercase",
-                          letterSpacing: "1px",
-                          fontWeight: "600",
-                        }}
-                      >
-                        PERCLOS
-                      </span>
-                      <span
-                        style={{
-                          fontFamily: "monospace",
-                          fontSize: "18px",
-                          fontWeight: "700",
-                          color:
-                            perclos < 10
-                              ? "#22c55e"
-                              : perclos < 20
-                                ? "#f59e0b"
-                                : "#ef4444",
-                        }}
-                      >
-                        {perclos}%
-                      </span>
-                    </div>
-
-                    {/* Head Pose */}
-                    <div
-                      style={{
-                        background: "#111620",
-                        border: "1px solid #1e2535",
-                        borderRadius: "8px",
-                        padding: "12px 20px",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: "11px",
-                          color: "#64748b",
-                          textTransform: "uppercase",
-                          letterSpacing: "1px",
-                          fontWeight: "600",
-                        }}
-                      >
-                        Head Pose
-                      </span>
-                      <span
-                        style={{
-                          fontFamily: "monospace",
-                          fontSize: "18px",
-                          fontWeight: "700",
-                          color: headPose === "Forward" ? "#22c55e" : "#ef4444",
-                        }}
-                      >
-                        {headPose === "Forward" ? "✅" : "⚠️"} {headPose}
-                      </span>
-                    </div>
-
-                    {/* New Ride Button */}
-                    <button
-                      onClick={async () => {
-                        if (
-                          window.confirm(
-                            "Start new ride? All alerts will be cleared.",
-                          )
-                        ) {
-                          await fetch(
-                            `${import.meta.env.VITE_API_URL}/api/alerts`,
-                            { method: "DELETE" },
-                          );
-                          fetchAlerts();
-                        }
-                      }}
-                      style={{
-                        background: "#22c55e",
-                        color: "white",
-                        border: "none",
-                        borderRadius: "8px",
-                        padding: "10px 24px",
-                        fontSize: "13px",
-                        fontWeight: "600",
-                        cursor: "pointer",
-                        marginLeft: "auto",
-                      }}
-                    >
-                      🚗 Start New Ride
-                    </button>
+                    
                   </div>
 
                   {/* Main Grid */}
@@ -201,7 +98,7 @@ function App() {
                       <div
                         style={{
                           display: "grid",
-                          gridTemplateColumns: "1fr 1fr",
+                          gridTemplateColumns: "2fr 1fr",
                           gap: "16px",
                         }}
                       >
