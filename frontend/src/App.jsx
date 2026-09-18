@@ -55,49 +55,94 @@ function App() {
               path="/"
               element={
                 <>
-                  <Stats alerts={alerts} />
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "2fr 1fr",
-                      gap: "24px",
-                      marginTop: "24px",
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "16px",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "1fr 180px",
-                          gap: "16px",
-                        }}
-                      >
-                        <LiveFeed
-                          onDrowsy={fetchAlerts}
-                          onYawn={fetchAlerts}
-                          onEarUpdate={handleEarUpdate}
-                          onPerclosUpdate={setPerclos}
-                          onHeadPose={setHeadPose}
-                        />
-                        <AlertScore alerts={alerts} earData={earData} />
-                      </div>
-                      <EarGraph earData={earData} />
-                    </div>
-                    <AlertLog alerts={alerts} />
-                  </div>
+                  {/* Top bar — Stats + PERCLOS + Head Pose + New Ride */}
                   <div
                     style={{
                       display: "flex",
-                      justifyContent: "flex-end",
-                      padding: "0 0 16px 0",
+                      alignItems: "center",
+                      gap: "12px",
+                      marginBottom: "20px",
+                      flexWrap: "wrap",
                     }}
                   >
+                    <Stats alerts={alerts} />
+
+                    {/* PERCLOS */}
+                    <div
+                      style={{
+                        background: "#111620",
+                        border: "1px solid #1e2535",
+                        borderRadius: "8px",
+                        padding: "12px 20px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: "11px",
+                          color: "#64748b",
+                          textTransform: "uppercase",
+                          letterSpacing: "1px",
+                          fontWeight: "600",
+                        }}
+                      >
+                        PERCLOS
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: "monospace",
+                          fontSize: "18px",
+                          fontWeight: "700",
+                          color:
+                            perclos < 10
+                              ? "#22c55e"
+                              : perclos < 20
+                                ? "#f59e0b"
+                                : "#ef4444",
+                        }}
+                      >
+                        {perclos}%
+                      </span>
+                    </div>
+
+                    {/* Head Pose */}
+                    <div
+                      style={{
+                        background: "#111620",
+                        border: "1px solid #1e2535",
+                        borderRadius: "8px",
+                        padding: "12px 20px",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontSize: "11px",
+                          color: "#64748b",
+                          textTransform: "uppercase",
+                          letterSpacing: "1px",
+                          fontWeight: "600",
+                        }}
+                      >
+                        Head Pose
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: "monospace",
+                          fontSize: "18px",
+                          fontWeight: "700",
+                          color: headPose === "Forward" ? "#22c55e" : "#ef4444",
+                        }}
+                      >
+                        {headPose === "Forward" ? "✅" : "⚠️"} {headPose}
+                      </span>
+                    </div>
+
+                    {/* New Ride Button */}
                     <button
                       onClick={async () => {
                         if (
@@ -121,92 +166,50 @@ function App() {
                         fontSize: "13px",
                         fontWeight: "600",
                         cursor: "pointer",
+                        marginLeft: "auto",
                       }}
                     >
                       🚗 Start New Ride
                     </button>
                   </div>
-                  {/* PERCLOS Badge */}
+
+                  {/* Main Grid */}
                   <div
                     style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "12px",
-                      background: "#111620",
-                      border: "1px solid #1e2535",
-                      padding: "12px 20px",
-                      marginBottom: "20px",
-                      borderRadius: "8px",
+                      display: "grid",
+                      gridTemplateColumns: "1fr 1fr",
+                      gap: "20px",
                     }}
                   >
-                    <span
+                    {/* Left — Camera + Score + Graph */}
+                    <div
                       style={{
-                        fontSize: "12px",
-                        color: "#64748b",
-                        textTransform: "uppercase",
-                        letterSpacing: "1px",
-                        fontWeight: "600",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "16px",
                       }}
                     >
-                      PERCLOS Score
-                    </span>
-                    <span
-                      style={{
-                        fontFamily: "monospace",
-                        fontSize: "20px",
-                        fontWeight: "700",
-                        color:
-                          perclos < 10
-                            ? "#22c55e"
-                            : perclos < 20
-                              ? "#f59e0b"
-                              : "#ef4444",
-                      }}
-                    >
-                      {perclos}%
-                    </span>
-                    <span style={{ fontSize: "12px", color: "#64748b" }}>
-                      {perclos < 10
-                        ? "— Alert"
-                        : perclos < 20
-                          ? "— Mildly Drowsy"
-                          : "— Drowsy"}
-                    </span>
-                  </div>
-                  {/* Head Pose Badge */}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "12px",
-                      background: "#111620",
-                      border: "1px solid #1e2535",
-                      padding: "12px 20px",
-                      marginBottom: "20px",
-                      borderRadius: "8px",
-                    }}
-                  >
-                    <span
-                      style={{
-                        fontSize: "12px",
-                        color: "#64748b",
-                        textTransform: "uppercase",
-                        letterSpacing: "1px",
-                        fontWeight: "600",
-                      }}
-                    >
-                      Head Pose
-                    </span>
-                    <span
-                      style={{
-                        fontFamily: "monospace",
-                        fontSize: "20px",
-                        fontWeight: "700",
-                        color: headPose === "Forward" ? "#22c55e" : "#ef4444",
-                      }}
-                    >
-                      {headPose === "Forward" ? "✅" : "⚠️"} {headPose}
-                    </span>
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "1fr 1fr",
+                          gap: "16px",
+                        }}
+                      >
+                        <LiveFeed
+                          onDrowsy={fetchAlerts}
+                          onYawn={fetchAlerts}
+                          onEarUpdate={handleEarUpdate}
+                          onPerclosUpdate={setPerclos}
+                          onHeadPose={setHeadPose}
+                        />
+                        <AlertScore alerts={alerts} earData={earData} />
+                      </div>
+                      <EarGraph earData={earData} />
+                    </div>
+
+                    {/* Right — Alert Log */}
+                    <AlertLog alerts={alerts} />
                   </div>
                 </>
               }
