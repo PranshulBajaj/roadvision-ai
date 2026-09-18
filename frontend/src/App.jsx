@@ -46,7 +46,16 @@ function App() {
         fontFamily: "Inter, sans-serif",
       }}
     >
-      <Navbar />
+      <Navbar
+        onNewRide={async () => {
+          if (window.confirm("Start new ride? All alerts will be cleared.")) {
+            await fetch(`${import.meta.env.VITE_API_URL}/api/alerts`, {
+              method: "DELETE",
+            });
+            fetchAlerts();
+          }
+        }}
+      />
       <div style={{ display: "flex" }}>
         <Sidebar />
         <div style={{ flex: 1, padding: "24px" }}>
@@ -203,7 +212,12 @@ function App() {
                           onPerclosUpdate={setPerclos}
                           onHeadPose={setHeadPose}
                         />
-                        <AlertScore alerts={alerts} earData={earData} />
+                        <AlertScore
+                          alerts={alerts}
+                          earData={earData}
+                          perclos={perclos}
+                          headPose={headPose}
+                        />
                       </div>
                       <EarGraph earData={earData} />
                     </div>

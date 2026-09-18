@@ -1,4 +1,4 @@
-function AlertScore({ alerts, earData }) {
+function AlertScore({ alerts, earData, perclos, headPose }) {
   const total = alerts.length;
   const drowsy = alerts.filter((a) => a.type === "DROWSY").length;
   const score = total === 0 ? 100 : Math.max(0, Math.round(100 - drowsy * 15));
@@ -24,11 +24,11 @@ function AlertScore({ alerts, earData }) {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        gap: "16px",
+        gap: "12px",
         height: "100%",
       }}
     >
-      {/* Ring */}
+      {/* Ring — same as before */}
       <div style={{ position: "relative", width: "90px", height: "90px" }}>
         <svg width="90" height="90" viewBox="0 0 90 90">
           <circle
@@ -79,7 +79,7 @@ function AlertScore({ alerts, earData }) {
         </div>
       </div>
 
-      {/* Live EAR/MAR */}
+      {/* EAR + MAR + PERCLOS + Head Pose */}
       {latestEAR && (
         <div
           style={{
@@ -89,6 +89,7 @@ function AlertScore({ alerts, earData }) {
             gap: "8px",
           }}
         >
+          {/* EAR */}
           <div
             style={{
               display: "flex",
@@ -117,6 +118,8 @@ function AlertScore({ alerts, earData }) {
               }}
             />
           </div>
+
+          {/* MAR */}
           <div
             style={{
               display: "flex",
@@ -144,6 +147,73 @@ function AlertScore({ alerts, earData }) {
                 borderRadius: "2px",
               }}
             />
+          </div>
+
+          {/* PERCLOS */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              fontSize: "11px",
+            }}
+          >
+            <span style={{ color: "#64748b" }}>PERCLOS</span>
+            <span
+              style={{
+                fontFamily: "monospace",
+                color:
+                  perclos < 10
+                    ? "#22c55e"
+                    : perclos < 20
+                      ? "#f59e0b"
+                      : "#ef4444",
+              }}
+            >
+              {perclos}%
+            </span>
+          </div>
+          <div
+            style={{
+              height: "4px",
+              background: "#1e2535",
+              borderRadius: "2px",
+            }}
+          >
+            <div
+              style={{
+                height: "100%",
+                width: `${Math.min(perclos * 2, 100)}%`,
+                background:
+                  perclos < 10
+                    ? "#22c55e"
+                    : perclos < 20
+                      ? "#f59e0b"
+                      : "#ef4444",
+                borderRadius: "2px",
+              }}
+            />
+          </div>
+
+          {/* Head Pose */}
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              fontSize: "11px",
+              marginTop: "4px",
+            }}
+          >
+            <span style={{ color: "#64748b" }}>Head Pose</span>
+            <span
+              style={{
+                color: headPose === "Forward" ? "#22c55e" : "#ef4444",
+                fontWeight: "600",
+                fontSize: "12px",
+              }}
+            >
+              {headPose === "Forward" ? "✅" : "⚠️"} {headPose}
+            </span>
           </div>
         </div>
       )}

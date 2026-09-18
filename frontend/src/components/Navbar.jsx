@@ -1,4 +1,6 @@
-function Navbar() {
+import { useNavigate } from 'react-router-dom'
+
+function Navbar({ onNewRide }) {
   return (
     <nav style={{
       display: 'flex',
@@ -19,17 +21,18 @@ function Navbar() {
           RoadVision AI
         </span>
       </div>
-      <div style={{
-        background: 'rgba(34,197,94,0.1)',
-        border: '1px solid rgba(34,197,94,0.3)',
-        color: '#22c55e',
-        padding: '5px 12px',
-        borderRadius: '20px',
-        fontSize: '12px',
-        fontWeight: '600'
-      }}>
-        🟢 LIVE MONITORING
-      </div>
+      <button
+        onClick={onNewRide}
+        style={{
+          background: '#22c55e',
+          color: 'white', border: 'none',
+          borderRadius: '20px', padding: '6px 16px',
+          fontSize: '12px', fontWeight: '600',
+          cursor: 'pointer',
+        }}
+      >
+        🚗 Start New Ride
+      </button>
     </nav>
   )
 }
