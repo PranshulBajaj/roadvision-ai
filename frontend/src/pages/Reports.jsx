@@ -1,31 +1,15 @@
 import { useState, useEffect } from "react";
 
-function Reports() {
+function Reports({ alerts, fetchAlerts }) {
   const [alerts, setAlerts] = useState([]);
   const [generating, setGenerating] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/api/alerts`)
-      .then((res) => res.json())
-      .then((data) => {
-        setAlerts(data);
-        setLoading(false);
-      });
-  }, []);
   const drowsyCount = alerts.filter((a) => a.type === "DROWSY").length;
   const yawnCount = alerts.filter((a) => a.type === "YAWN").length;
   const score =
     alerts.length === 0 ? 100 : Math.max(0, Math.round(100 - drowsyCount * 15));
   const label = score >= 80 ? "Alert" : score >= 50 ? "Moderate" : "Drowsy";
-  const handleNewRide = async () => {
-    if (window.confirm("Start new ride? All current alerts will be cleared.")) {
-      await fetch(`${import.meta.env.VITE_API_URL}/api/alerts`, {
-        method: "DELETE",
-      });
-      setAlerts([]);
-    }
-  };
 
   const handleGenerate = () => {
     setGenerating(true);
@@ -216,7 +200,6 @@ RoadVision AI | MSIT, New Delhi | 2026-27
       >
         {generating ? "Generating..." : "⬇️ Download Report"}
       </button>
-      
     </div>
   );
 }

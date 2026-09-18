@@ -2,15 +2,12 @@ import { useState, useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Sidebar from "./components/Sidebar";
-import Stats from "./components/Stats";
-import AlertLog from "./components/AlertLog";
-import LiveFeed from "./components/LiveFeed";
-import EarGraph from "./components/EarGraph";
-import AlertScore from "./components/AlertScore";
 import DriverProfile from "./pages/DriverProfile";
 import About from "./pages/About";
 import Settings from "./pages/Settings";
 import Reports from "./pages/Reports";
+import Home from './pages/Home'
+
 
 function App() {
   const [alerts, setAlerts] = useState([]);
@@ -63,56 +60,22 @@ function App() {
             <Route
               path="/"
               element={
-                <>
-                  <Stats alerts={alerts} />
-                  {/* Main Grid */}
-                  <div
-                    style={{
-                      display: "grid",
-                      gridTemplateColumns: "2fr 1fr",
-                      gap: "20px",
-                      marginTop: "20px",
-                    }}
-                  >
-                    {/* Left — Camera + Score + Graph */}
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "16px",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "grid",
-                          gridTemplateColumns: "2fr 1fr",
-                          gap: "16px",
-                        }}
-                      >
-                        <LiveFeed
-                          onDrowsy={fetchAlerts}
-                          onYawn={fetchAlerts}
-                          onEarUpdate={handleEarUpdate}
-                          onPerclosUpdate={setPerclos}
-                          onHeadPose={setHeadPose}
-                        />
-                        <AlertScore
-                          alerts={alerts}
-                          earData={earData}
-                          perclos={perclos}
-                          headPose={headPose}
-                        />
-                      </div>
-                      <EarGraph earData={earData} />
-                    </div>
-
-                    {/* Right — Alert Log */}
-                    <AlertLog alerts={alerts} />
-                  </div>
-                </>
+                <Home
+                  alerts={alerts}
+                  earData={earData}
+                  fetchAlerts={fetchAlerts}
+                  handleEarUpdate={handleEarUpdate}
+                  perclos={perclos}
+                  setPerclos={setPerclos}
+                  headPose={headPose}
+                  setHeadPose={setHeadPose}
+                />
               }
             />
-            <Route path="/reports" element={<Reports />} />
+            <Route
+              path="/reports"
+              element={<Reports alerts={alerts} fetchAlerts={fetchAlerts} />}
+            />
             <Route path="/profile" element={<DriverProfile />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="/about" element={<About />} />
