@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 
 function LiveFeed({
+  videoRef,
+  canvasRef,
   onDrowsy,
   onYawn,
   onEarUpdate,
@@ -18,7 +20,8 @@ function LiveFeed({
     let yawnFrames = 0;
     const DROWSY_THRESHOLD = 15;
     const YAWN_THRESHOLD = 10;
-
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
     async function sendAlert(type, earValue, marValue) {
       const audioCtx = new AudioContext();
       const oscillator = audioCtx.createOscillator();
@@ -181,56 +184,7 @@ function LiveFeed({
     init();
   }, []);
 
-  return (
-    <div
-      style={{
-        background: "#111620",
-        border: "1px solid #1e2535",
-        borderRadius: "8px",
-        padding: "20px",
-      }}
-    >
-      <div
-        style={{
-          fontSize: "11px",
-          color: "#64748b",
-          textTransform: "uppercase",
-          letterSpacing: "1px",
-          fontWeight: "600",
-          marginBottom: "12px",
-        }}
-      >
-        Live Camera Feed
-      </div>
-      <div style={{ position: "relative", width: "100%", aspectRatio: "4/3" }}>
-        <video
-          ref={videoRef}
-          autoPlay
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            borderRadius: "8px",
-          }}
-        />
-        <canvas
-          ref={canvasRef}
-          width={640}
-          height={480}
-          style={{
-            position: "absolute",
-            top: 0,
-            left: 0,
-            width: "100%",
-            height: "100%",
-            borderRadius: "8px",
-          }}
-        />
-      </div>
-    </div>
-  );
+  return null;
 }
 
 export default LiveFeed;

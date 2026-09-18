@@ -7,12 +7,16 @@ import About from "./pages/About";
 import Settings from "./pages/Settings";
 import Reports from "./pages/Reports";
 import Home from "./pages/Home";
+import { useRef } from "react";
 
 function App() {
   const [alerts, setAlerts] = useState([]);
   const [earData, setEarData] = useState([]);
   const [perclos, setPerclos] = useState(0);
   const [headPose, setHeadPose] = useState("Forward");
+
+  const videoRef = useRef(null);
+  const canvasRef = useRef(null);
 
   const fetchAlerts = async () => {
     const res = await fetch(`${import.meta.env.VITE_API_URL}/api/alerts`);
@@ -57,6 +61,8 @@ function App() {
           {/* LiveFeed hidden — always mounted */}
           <div style={{ display: "none" }}>
             <LiveFeed
+              videoRef={videoRef}
+              canvasRef={canvasRef}
               onDrowsy={fetchAlerts}
               onYawn={fetchAlerts}
               onEarUpdate={handleEarUpdate}
@@ -72,12 +78,10 @@ function App() {
                 <Home
                   alerts={alerts}
                   earData={earData}
-                  fetchAlerts={fetchAlerts}
-                  handleEarUpdate={handleEarUpdate}
                   perclos={perclos}
-                  setPerclos={setPerclos}
                   headPose={headPose}
-                  setHeadPose={setHeadPose}
+                  videoRef={videoRef}
+                  canvasRef={canvasRef}
                 />
               }
             />
