@@ -64,27 +64,14 @@ function App() {
               path="/"
               element={
                 <>
-                  {/* Top bar — Stats*/}
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "12px",
-                      marginBottom: "20px",
-                      flexWrap: "wrap",
-                    }}
-                  >
-                    <Stats alerts={alerts} />
-
-                    
-                  </div>
-
+                  <Stats alerts={alerts} />
                   {/* Main Grid */}
                   <div
                     style={{
                       display: "grid",
                       gridTemplateColumns: "1fr 1fr",
                       gap: "20px",
+                      marginTop: "20px",
                     }}
                   >
                     {/* Left — Camera + Score + Graph */}
