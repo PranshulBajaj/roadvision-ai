@@ -216,40 +216,7 @@ RoadVision AI | MSIT, New Delhi | 2026-27
       >
         {generating ? "Generating..." : "⬇️ Download Report"}
       </button>
-      <div style={{ display: "flex", gap: "12px", marginTop: "20px" }}>
-        <button
-          onClick={handleGenerate}
-          disabled={generating}
-          style={{
-            background: "#3b82f6",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            padding: "12px 32px",
-            fontSize: "14px",
-            fontWeight: "600",
-            cursor: "pointer",
-          }}
-        >
-          {generating ? "Generating..." : "⬇️ Download Report"}
-        </button>
-
-        <button
-          onClick={handleNewRide}
-          style={{
-            background: "#22c55e",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            padding: "12px 32px",
-            fontSize: "14px",
-            fontWeight: "600",
-            cursor: "pointer",
-          }}
-        >
-          🚗 Start New Ride
-        </button>
-      </div>
+      
     </div>
   );
 }
