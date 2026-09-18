@@ -91,6 +91,41 @@ function App() {
                     </div>
                     <AlertLog alerts={alerts} />
                   </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      padding: "0 0 16px 0",
+                    }}
+                  >
+                    <button
+                      onClick={async () => {
+                        if (
+                          window.confirm(
+                            "Start new ride? All alerts will be cleared.",
+                          )
+                        ) {
+                          await fetch(
+                            `${import.meta.env.VITE_API_URL}/api/alerts`,
+                            { method: "DELETE" },
+                          );
+                          fetchAlerts();
+                        }
+                      }}
+                      style={{
+                        background: "#22c55e",
+                        color: "white",
+                        border: "none",
+                        borderRadius: "8px",
+                        padding: "10px 24px",
+                        fontSize: "13px",
+                        fontWeight: "600",
+                        cursor: "pointer",
+                      }}
+                    >
+                      🚗 Start New Ride
+                    </button>
+                  </div>
                   {/* PERCLOS Badge */}
                   <div
                     style={{

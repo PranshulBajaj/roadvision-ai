@@ -18,6 +18,14 @@ function Reports() {
   const score =
     alerts.length === 0 ? 100 : Math.max(0, Math.round(100 - drowsyCount * 15));
   const label = score >= 80 ? "Alert" : score >= 50 ? "Moderate" : "Drowsy";
+  const handleNewRide = async () => {
+    if (window.confirm("Start new ride? All current alerts will be cleared.")) {
+      await fetch(`${import.meta.env.VITE_API_URL}/api/alerts`, {
+        method: "DELETE",
+      });
+      setAlerts([]);
+    }
+  };
 
   const handleGenerate = () => {
     setGenerating(true);
@@ -208,6 +216,40 @@ RoadVision AI | MSIT, New Delhi | 2026-27
       >
         {generating ? "Generating..." : "⬇️ Download Report"}
       </button>
+      <div style={{ display: "flex", gap: "12px", marginTop: "20px" }}>
+        <button
+          onClick={handleGenerate}
+          disabled={generating}
+          style={{
+            background: "#3b82f6",
+            color: "white",
+            border: "none",
+            borderRadius: "8px",
+            padding: "12px 32px",
+            fontSize: "14px",
+            fontWeight: "600",
+            cursor: "pointer",
+          }}
+        >
+          {generating ? "Generating..." : "⬇️ Download Report"}
+        </button>
+
+        <button
+          onClick={handleNewRide}
+          style={{
+            background: "#22c55e",
+            color: "white",
+            border: "none",
+            borderRadius: "8px",
+            padding: "12px 32px",
+            fontSize: "14px",
+            fontWeight: "600",
+            cursor: "pointer",
+          }}
+        >
+          🚗 Start New Ride
+        </button>
+      </div>
     </div>
   );
 }
