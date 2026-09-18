@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 function LiveFeed({
   videoRef,
@@ -9,8 +9,6 @@ function LiveFeed({
   onPerclosUpdate,
   onHeadPose,
 }) {
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
   let totalFrames = 0;
   let closedFrames = 0;
 

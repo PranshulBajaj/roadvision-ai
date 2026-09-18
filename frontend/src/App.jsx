@@ -5,6 +5,7 @@ import Sidebar from "./components/Sidebar";
 import DriverProfile from "./pages/DriverProfile";
 import About from "./pages/About";
 import Settings from "./pages/Settings";
+import LiveFeed from "./components/LiveFeed";
 import Reports from "./pages/Reports";
 import Home from "./pages/Home";
 import { useRef } from "react";
