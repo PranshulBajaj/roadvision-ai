@@ -15,6 +15,13 @@ function App() {
   const [earData, setEarData] = useState([]);
   const [perclos, setPerclos] = useState(0);
   const [headPose, setHeadPose] = useState("Forward");
+  const [aiResult, setAiResult] = useState({
+    status: "ALERT",
+    ear: null,
+    mar: null,
+    confidence: 0,
+    yolo_face_detected: false,
+  });
 
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
@@ -69,6 +76,7 @@ function App() {
               onEarUpdate={handleEarUpdate}
               onPerclosUpdate={setPerclos}
               onHeadPose={setHeadPose}
+              onAIResult={setAiResult}
             />
           </div>
 
@@ -83,6 +91,7 @@ function App() {
                   headPose={headPose}
                   videoRef={videoRef}
                   canvasRef={canvasRef}
+                  aiResult={aiResult}
                 />
               }
             />

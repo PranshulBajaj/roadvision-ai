@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 
 function Reports({ alerts, fetchAlerts }) {
-  const [alerts, setAlerts] = useState([]);
   const [generating, setGenerating] = useState(false);
   const [loading, setLoading] = useState(true);
 

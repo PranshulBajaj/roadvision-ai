@@ -8,6 +8,7 @@ function LiveFeed({
   onEarUpdate,
   onPerclosUpdate,
   onHeadPose,
+  onAIResult,
 }) {
   let totalFrames = 0;
   let closedFrames = 0;
@@ -64,7 +65,7 @@ function LiveFeed({
       videoRef.current.srcObject = stream;
       videoRef.current.addEventListener("loadeddata", detect);
     }
-
+    let aiFrameCount =0;
     function detect() {
       const video = videoRef.current;
       const canvas = canvasRef.current;
@@ -176,7 +177,47 @@ function LiveFeed({
           }
         }
       }
+
+      aiFrameCount++;
+
+      // Har 15 frames pe AI service ko bhejo
+      if (aiFrameCount % 15 === 0) {
+        sendFrameToAI(canvas, video);
+      }
+
       requestAnimationFrame(detect);
+    }
+
+    async function sendFrameToAI(canvas, video) {
+      // Canvas pe video frame draw karo
+      const tempCanvas = document.createElement("canvas");
+      tempCanvas.width = 640;
+      tempCanvas.height = 480;
+      const tempCtx = tempCanvas.getContext("2d");
+      tempCtx.drawImage(video, 0, 0, 640, 480);
+
+      // Canvas to blob
+      tempCanvas.toBlob(
+        async (blob) => {
+          const formData = new FormData();
+          formData.append("file", blob, "frame.jpg");
+
+          const res = await fetch("http://localhost:8000/detect", {
+            method: "POST",
+            body: formData,
+          });
+
+          const data = await res.json();
+          console.log("AI Result:", data);
+
+          // Agar YOLO ne face detect kiya
+          if (data.yolo_face_detected) {
+            onAIResult(data);
+          }
+        },
+        "image/jpeg",
+        0.8,
+      );
     }
 
     init();
