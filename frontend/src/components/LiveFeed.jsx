@@ -65,7 +65,7 @@ function LiveFeed({
       videoRef.current.srcObject = stream;
       videoRef.current.addEventListener("loadeddata", detect);
     }
-    let aiFrameCount =0;
+    let aiFrameCount = 0;
     function detect() {
       const video = videoRef.current;
       const canvas = canvasRef.current;
@@ -181,38 +181,60 @@ function LiveFeed({
       aiFrameCount++;
 
       // Har 15 frames pe AI service ko bhejo
+
       if (aiFrameCount % 15 === 0) {
-        sendFrameToAI(canvas, video);
+        sendFrameToAI(canvas, video, parseFloat(avgEAR), parseFloat(mar));
       }
 
       requestAnimationFrame(detect);
     }
 
-    async function sendFrameToAI(canvas, video) {
-      // Canvas pe video frame draw karo
+    async function sendFrameToAI(canvas, video, currentEAR, currentMAR) {
       const tempCanvas = document.createElement("canvas");
       tempCanvas.width = 640;
       tempCanvas.height = 480;
       const tempCtx = tempCanvas.getContext("2d");
       tempCtx.drawImage(video, 0, 0, 640, 480);
 
-      // Canvas to blob
       tempCanvas.toBlob(
         async (blob) => {
           const formData = new FormData();
           formData.append("file", blob, "frame.jpg");
 
-          const res = await fetch(`${import.meta.env.VITE_AI_URL}/detect`, {
-            method: "POST",
-            body: formData,
-          });
+          try {
+            const res = await fetch(`${import.meta.env.VITE_AI_URL}/detect`, {
+              method: "POST",
+              body: formData,
+            });
 
-          const data = await res.json();
-          console.log("AI Result:", data);
+            const data = await res.json();
 
-          // Agar YOLO ne face detect kiya
-          if (data.yolo_face_detected) {
-            onAIResult(data);
+            // FUSION LOGIC
+            let fusedStatus = "ALERT";
+
+            if (data.yolo_face_detected) {
+              // YOLOv11 ne face detect kiya — ab MediaPipe ke EAR/MAR check karo
+              if (currentEAR < 0.28) {
+                fusedStatus = "DROWSY";
+              } else if (currentMAR > 0.5) {
+                fusedStatus = "YAWN";
+              } else {
+                fusedStatus = "ALERT";
+              }
+            } else {
+              // YOLOv11 ne face nahi detect kiya
+              fusedStatus = "No Face";
+            }
+
+            onAIResult({
+              yolo_face_detected: data.yolo_face_detected,
+              confidence: data.confidence,
+              status: fusedStatus,
+              ear: currentEAR,
+              mar: currentMAR,
+            });
+          } catch (err) {
+            console.log("AI Service error:", err);
           }
         },
         "image/jpeg",
