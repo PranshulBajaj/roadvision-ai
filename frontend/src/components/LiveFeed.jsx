@@ -202,7 +202,7 @@ function LiveFeed({
           const formData = new FormData();
           formData.append("file", blob, "frame.jpg");
 
-          const res = await fetch("http://localhost:8000/detect", {
+          const res = await fetch(`${import.meta.env.VITE_AI_URL}/detect`, {
             method: "POST",
             body: formData,
           });
