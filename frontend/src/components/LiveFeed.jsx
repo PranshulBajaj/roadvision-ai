@@ -74,6 +74,8 @@ function LiveFeed({
       const results = faceLandmarker.detectForVideo(video, performance.now());
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+      let avgEAR, mar;
+
       if (results.faceLandmarks) {
         for (const landmarks of results.faceLandmarks) {
           const le = [33, 160, 158, 133, 153, 144].map((i) => landmarks[i]);
@@ -86,7 +88,7 @@ function LiveFeed({
             (Math.abs(re[1].y - re[5].y) + Math.abs(re[2].y - re[4].y)) /
             (2 * Math.abs(re[0].x - re[3].x));
 
-          const avgEAR = ((ear + earRight) / 2).toFixed(3);
+          avgEAR = ((ear + earRight) / 2).toFixed(3);
 
           // PERCLOS calculation
           totalFrames++;
@@ -98,7 +100,7 @@ function LiveFeed({
           onPerclosUpdate(parseFloat(perclos));
 
           const mo = [13, 14, 78, 308, 82, 312].map((i) => landmarks[i]);
-          const mar = (
+          mar = (
             Math.abs(mo[0].y - mo[1].y) / Math.abs(mo[2].x - mo[3].x)
           ).toFixed(3);
 
