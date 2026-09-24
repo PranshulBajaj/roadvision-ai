@@ -115,7 +115,7 @@ function Home({ alerts, earData, perclos, headPose, videoRef, canvasRef, aiResul
             fontWeight: "600",
           }}
         >
-          YOLOv11 + MobileNetV2
+          YOLOv11 
         </div>
 
         <div
